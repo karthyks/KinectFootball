@@ -13,6 +13,8 @@ public class BallScript : MonoBehaviour {
     float acceleration;
 
     ScriptHandler handler;
+
+    public static string goal = null;
     void Start()
     {
         handler = GameObject.Find("ScriptHandler").GetComponent<ScriptHandler>();
@@ -30,11 +32,15 @@ public class BallScript : MonoBehaviour {
         force = mass * finalVelocity;
         if (force < 5)
         {
-            force = 10;
+            force = 18;
         }
-        transform.rigidbody.AddForce(force * new Vector3(angle, 0.2f, 1) * 75);
+        else
+        {
+            force = 30;
+        }
+        transform.rigidbody.AddForce(force * new Vector3(angle, 0.2f, 1) * 55);
         Debug.Log(force);
-
+        GoalieAI.force = (int)force;
         handler.SendMessage("NextKick", SendMessageOptions.DontRequireReceiver);
     }
 
@@ -44,5 +50,18 @@ public class BallScript : MonoBehaviour {
         {
             handler.SendMessage("NextKick", SendMessageOptions.DontRequireReceiver);
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.collider.tag == "Goal")
+        {
+            goal = "Goal";
+        }
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(50, 50, 200, 100), goal);
     }
 }

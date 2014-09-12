@@ -67,6 +67,7 @@
      <Compile Include="Assets\KinectScripts\KinectWrapper.cs" />
      <Compile Include="Assets\OverlayDemo\Scripts\KinectOverlayer.cs" />
      <Compile Include="Assets\Scripts\BallScript.cs" />
+     <Compile Include="Assets\Scripts\GoalieAI.cs" />
      <Compile Include="Assets\Scripts\KickScript.cs" />
      <Compile Include="Assets\Scripts\ScriptHandler.cs" />
   </ItemGroup>

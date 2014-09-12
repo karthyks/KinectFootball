@@ -6,7 +6,7 @@ public class KickScript : MonoBehaviour {
 
     GameObject rightFoot;
     GameObject leftFoot;
-    GameObject spine;
+    GameObject head;
     GameObject ball;
 
     float posOfFoot;
@@ -19,6 +19,8 @@ public class KickScript : MonoBehaviour {
 
     List<float> timeList;
     List<float> footPos;
+    List<Vector3> angleDetect;
+    float angle = 0;
 
     bool kickStarted = false;
 
@@ -28,21 +30,26 @@ public class KickScript : MonoBehaviour {
         leftFoot = GameObject.Find("15_Foot_Left");
         rightFoot = GameObject.Find("19_Foot_Right");
         ball = GameObject.Find("Ball");
-        spine = GameObject.Find("01_Spine");
+        head = GameObject.Find("12_Hip_Left");
         time = 0;
         timeTaken = 0;
         maxDistanceofKick = 0;
         bs = GameObject.Find("Ball").GetComponent<BallScript>();
         footPos = new List<float>();
         timeList = new List<float>();
+        angleDetect = new List<Vector3>();
     }
 
+    void OnGUI()
+    {
+        GUI.Label(new Rect(20, 20, 250, 50), leftFoot.transform.position.ToString());
+    }
     void Update()
     {
-        posOfFoot = Mathf.Floor((leftFoot.transform.position.z - spine.transform.position.z) * 100) / 100;
-
+        posOfFoot = Mathf.Floor((leftFoot.transform.position.z - head.transform.position.z) * 100) / 100;
         if (posOfFoot > 0.1 && !kickStarted)
         {
+            angleDetect.Add(leftFoot.transform.position);
             kickStarted = true;
             time = 0;
         }
@@ -57,15 +64,28 @@ public class KickScript : MonoBehaviour {
         time = time + Time.deltaTime;
         footPos.Add(posOfFoot);
         timeList.Add(time);
-
-        if (posOfFoot < -0.35)
+        //Vector3 max;
+        //Vector3 min;
+        //float dec = 0;
+        //float inc = 0;
+        // -0.9, 0.3, -11.9    -1.4, 0.5, -12.6
+        // 
+        
+        if (posOfFoot < -0.4)
         {
-            angleOfKick = (leftFoot.transform.position - ball.transform.position);
-            //angleOfKick.Normalize();
+            angleDetect.Add(leftFoot.transform.position);
+            angleOfKick = (leftFoot.transform.position - head.transform.position);
+            //Debug.Log(angle);
+            //foreach (Vector3 a in angleDetect)
+            //    Debug.Log(a);
+            angleOfKick.Normalize();
+            Debug.Log(angleOfKick);
+            GoalieAI.angle = angleOfKick;
             kickStarted = false;
             KickParameters();
         }
     }
+
 
     void KickParameters()
     {
